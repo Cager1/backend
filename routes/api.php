@@ -26,6 +26,13 @@ use Illuminate\Support\Facades\Route;
 //  Public routes Guest auth -> :
 //                              View posts
 //                              Register as user
+
+// Return to Administrator routes upon publication
+Route::post('admin/register', [AuthController::class, 'adminRegister']);
+Route::resource('admin/roles', RoleController::class);
+// ------------------------------------------------------
+
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordController::class, 'forgotPassword']);
@@ -73,14 +80,12 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:Serviser,Admin']], funct
 //                                    Upkeep, backup and restore database
 
 Route::group(['middleware' => ['auth:sanctum', 'ability:Admin']], function () {
-    Route::resource('admin/roles', RoleController::class);
     Route::resource('admin/users', UserController::class);
 
     Route::post('/services', [ServiceController::class, 'store']);
     Route::put('/services/{id}', [ServiceController::class, 'update']);
     Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
 
-    Route::post('admin/register', [AuthController::class, 'adminRegister']);
 
     Route::put('admin/job/{id}', [JobController::class, 'adminUpdate']);
     Route::delete('admin/job/{id}', [JobController::class, 'adminDestroy']);
